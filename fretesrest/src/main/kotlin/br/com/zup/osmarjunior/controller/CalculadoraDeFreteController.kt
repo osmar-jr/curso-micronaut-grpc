@@ -36,30 +36,29 @@ class CalculadoraDeFreteController(@Inject val grpcClient: FreteServiceGrpc.Fret
             return HttpResponse.ok(freteCalculadoResponse)
         } catch (exception: StatusRuntimeException) {
             val statusCode = exception.status.code
-            val description = exception.status.description
+            val description = exception.status.description ?: ""
 
-            if(statusCode.equals(Status.Code.INVALID_ARGUMENT)){
-                throw HttpStatusException(HttpStatus.BAD_REQUEST, description)
-            }
+            val (statusHttp, message) = when (statusCode) {
+                Status.INVALID_ARGUMENT.code -> Pair(HttpStatus.BAD_REQUEST, description)
+                Status.PERMISSION_DENIED.code -> {
+                    val statusProto = StatusProto.fromThrowable(exception)
 
-            if (statusCode.equals(Status.Code.PERMISSION_DENIED)){
-                val statusProto = StatusProto.fromThrowable(exception)
+                    if (statusProto == null) {
+                        Pair(HttpStatus.FORBIDDEN, description)
+                    }
+                    val anyErroDetails = statusProto!!.detailsList.get(0)
+                    val errorDetails = anyErroDetails.unpack(ErrorDetails::class.java)
 
-                if (statusProto == null) {
-                    throw HttpStatusException(HttpStatus.FORBIDDEN, description)
+                    Pair(HttpStatus.FORBIDDEN, "${errorDetails.code}: ${errorDetails.message}")
                 }
 
-                val anyErroDetails = statusProto.detailsList.get(0)
-                val errorDetails = anyErroDetails.unpack(ErrorDetails::class.java)
-
-                throw HttpStatusException(HttpStatus.FORBIDDEN, "${errorDetails.code}: ${errorDetails.message}")
-
+                else -> {
+                    logger.error("Erro inesperado ao consultar o frete $cep")
+                    Pair(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possivel completar a requisição")
+                }
             }
 
-            throw HttpStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                exception.message
-            )
+            throw HttpStatusException(statusHttp, message)
         }
     }
 }
