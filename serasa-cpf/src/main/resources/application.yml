@@ -1,0 +1,13 @@
+micronaut:
+  application:
+    name: serasaCpf
+
+grpc:
+  client:
+    plaintext: true
+    max_retry_attempts: 10
+  channels:
+    serasa:
+      address: 'https://api.serasa.com.br:50051'
+      plaintext: true
+      max_retry_attempts: 10

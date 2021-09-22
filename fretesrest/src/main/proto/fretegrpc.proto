@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zup.osmarjunior";
+option java_outer_classname = "Fretegrpc";
+option objc_class_prefix = "HLW";
+
+package br.com.zup.osmarjunior;
+
+service FreteService {
+  rpc send (FretegrpcRequest) returns (FretegrpcReply) {}
+  rpc calcularFrete (FreteRequest) returns (FreteResponse){}
+}
+
+message FretegrpcRequest {
+  string name = 1;
+}
+
+message FretegrpcReply {
+  string message = 1;
+}
+
+message FreteRequest {
+  string cep = 1;
+}
+
+message FreteResponse {
+  string cep = 1;
+  double valor = 2;
+}
+
+message ErrorDetails {
+  int32 code = 1;
+  string message = 2;
+}

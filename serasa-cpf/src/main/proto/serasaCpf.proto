@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zup.osmarjunior";
+option java_outer_classname = "SerasaCpf";
+option objc_class_prefix = "HLW";
+
+package br.com.zup.osmarjunior;
+
+service SerasaGrpcService {
+  rpc verificarSituacaoDoCliente(SituacaoDoClienteRequest) returns (SituacaoDoClienteResponse) {}
+}
+
+message SituacaoDoClienteRequest {
+  string cpf = 1;
+}
+
+enum Situacao {
+  DESCONHECIDA = 0;
+  REGULAR = 1;
+  IRREGULAR = 2;
+}
+
+message SituacaoDoClienteResponse {
+  Situacao situacao = 1;
+}

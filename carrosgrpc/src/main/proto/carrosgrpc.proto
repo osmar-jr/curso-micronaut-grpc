@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zup.osmarjunior";
+option java_outer_classname = "CarrosGrpc";
+option objc_class_prefix = "HLW";
+
+package br.com.zup.osmarjunior;
+
+import "google/protobuf/timestamp.proto";
+
+service CarrosService {
+  rpc cadastrar (CarroRequest) returns (CarroResponse) {}
+}
+
+message Proprietario {
+  string nome = 1;
+  string cpf = 2;
+}
+
+
+enum Combustivel {
+  GASOLINA = 0;
+  ALCOOL = 1;
+  FLEX = 3;
+}
+
+message CarroRequest {
+  string modelo = 1;
+  string placa = 2;
+  int32 ano = 3;
+  Proprietario proprietario = 4;
+  Combustivel combustivel = 5;
+}
+
+message CarroResponse {
+  string id = 1;
+  google.protobuf.Timestamp criadoEm = 2;
+}
