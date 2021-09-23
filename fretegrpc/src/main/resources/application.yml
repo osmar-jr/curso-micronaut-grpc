@@ -1,3 +1,15 @@
 micronaut:
   application:
     name: fretegrpc
+
+grpc:
+  server:
+    health:
+      enable: true # default value is true
+
+endpoints:
+  all:
+    sensitive: false # restringe acesso apenas a usuarios logados ou nao
+  health:
+    enable: true # default value is true
+    details-visible: ANONYMOUS

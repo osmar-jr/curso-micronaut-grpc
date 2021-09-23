@@ -65,7 +65,7 @@ class FreteGrpcServer : FreteServiceGrpc.FreteServiceImplBase() {
 
         val response = FreteResponse
             .newBuilder()
-            .setCep(request?.cep)
+            .setCep(request.cep)
             .setValor(Random.nextDouble(0.00, 140.00))
             .build()
 
