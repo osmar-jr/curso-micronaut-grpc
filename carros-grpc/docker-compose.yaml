@@ -1,0 +1,13 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:alpine'
+    volumes:
+      - postgres-grpc-volume:/var/lib/postgresql/data
+    ports:
+      - 5436:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: carros_grpc_mk
+volumes:
+  postgres-grpc-volume:
